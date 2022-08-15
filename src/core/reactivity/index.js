@@ -8,11 +8,13 @@ class Dep {
   }
 
   get value() {
+    console.log("getgetget");
     this.depend();
     return this._val;
   }
 
   set value(newVal) {
+    console.log("setsetset");
     this._val = newVal;
     this.notice();
   }
@@ -29,7 +31,10 @@ class Dep {
   }
 }
 
-// 收集依赖
+/**
+ * 收集依赖
+ * @param {Function} effect
+ */
 export function effectWatch(effect) {
   currentEffect = effect;
   effect();
@@ -38,7 +43,7 @@ export function effectWatch(effect) {
 
 const tartgetMap = new Map();
 
-console.log(tartgetMap);
+window.tartgetMap = tartgetMap;
 
 function getDep(target, key) {
   let depsMap = tartgetMap.get(target);
@@ -48,13 +53,17 @@ function getDep(target, key) {
   }
   let dep = depsMap.get(key);
   if (!dep) {
-    dep = new Dep();
+    dep = new Dep(); // dep的get/set函数不会触发,因为并不是通过单个值进行修改而是对父级的值进行修改 所以需要手动收集订阅依赖
     depsMap.set(key, dep);
   }
-
   return dep;
 }
 
+/**
+ * 创建一个reactive的对象
+ * @param {any} raw
+ * @returns
+ */
 export function reactive(raw) {
   return new Proxy(raw, {
     get(target, key) {
