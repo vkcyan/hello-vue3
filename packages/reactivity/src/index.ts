@@ -1,3 +1,4 @@
-import { abc } from "@vue/shared";
+import { effect } from "./effect";
+import { reactive } from "./reactive";
 
-abc(123);
+export { effect, reactive };
